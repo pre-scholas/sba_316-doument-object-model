@@ -11,8 +11,8 @@ const barbers = [
 			'wednesday',
 			'thursday',
 			'friday',
-      'saturday',
-      'sunday',
+			'saturday',
+			'sunday',
 		],
 	},
 	{
@@ -26,8 +26,8 @@ const barbers = [
 			'wednesday',
 			'thursday',
 			'friday',
-      'saturday',
-      'sunday',
+			'saturday',
+			'sunday',
 		],
 	},
 	{
@@ -41,8 +41,8 @@ const barbers = [
 			'wednesday',
 			'thursday',
 			'friday',
-      'saturday',
-      'sunday',
+			'saturday',
+			'sunday',
 		],
 	},
 	{
@@ -56,8 +56,8 @@ const barbers = [
 			'wednesday',
 			'thursday',
 			'friday',
-      'saturday',
-      'sunday',
+			'saturday',
+			'sunday',
 		],
 	},
 	{
@@ -70,64 +70,166 @@ const barbers = [
 			'tuesday',
 			'wednesday',
 			'thursday',
-      'friday',
-      'saturday',
-      'sunday',
+			'friday',
+			'saturday',
+			'sunday',
 		],
 	},
 ];
-const barberInfo = barbers['name'] + barbers['image'] + barbers['description']
-for (let i = 0; i < barbers.length; i++) {
-  console.log(barbers[i].name + " " + barbers[i].image + " " + barbers[i].description);
-  
+
+// Cache DOM Elements
+// cache elements needed to interact with
+const mainEl = document.querySelector('main');
+const contentWrapper = document.getElementById('content');
+
+// State Management
+// a variable to keep track of the application's state.
+let selectedBarber = null;
+
+// Render Functions
+// functions responsible for drawing content on screen.
+
+
+//  clears the content wrapper and renders the initial view with barber cards.
+ 
+function renderInitialView() {
+	// clear any existing content
+	contentWrapper.innerHTML = '';
+
+	// create and append the main title
+	const title = document.createElement('h1');
+	title.textContent = 'Sharp Cutz Booking';
+	contentWrapper.appendChild(title);
+
+	// create a container for the barber cards for better styling
+	const cardsContainer =
+		document.createElement('div');
+	cardsContainer.classList.add( 'cards-container',);
+	contentWrapper.appendChild( cardsContainer,);
+
+	renderBarberCards(cardsContainer);
 }
-// console.log(barbers[0].name + " " + barbers[0].image + " " + barbers[0].description)
-console.log(barberInfo)
-
-const printArea = document.querySelector('#content')
-
-const dropdown = () => {
-  const component = document.createElement('div');
-
-  const input = document.createInput()
-  // input.type = 'select'
-  // input.name = 'barber'
-  // input.id = 'barber'
-
-  const dropdown = showDropdown();
-
-  component.appendChild(input);
-  component.appendChild(dropdown);
-  printArea.appendChild(component);
 
 
+ // Creates and displays a card for each barber inside the provided container.
+// The element to append barber cards
+
+function renderBarberCards() {
+	const container = document.querySelector( '.cards-container', );
+	container.innerHTML = ''; // Clears previous cards
+
+	barbers.forEach((barber) => {
+		const card = document.createElement( 'div', );
+		card.classList.add( 'barber-card', );
+    console.log(barber);
+    console.log(card)
+		card.innerHTML = `
+      <img src="images/${barber.image}" alt="Photo of ${barber.name}" style="width:100px; height:100px; border-radius:10%; object-fit:cover; border: solid 1px black; padding: 10px;">
+      <h2>${barber.name}</h2>
+      <p>${barber.description}</p>
+      <button class="book-btn">Book Now</button>
+    `;
+
+		// Add an event listener to the "Book Now" button on this specific card
+		const bookButton = card.querySelector( '.book-btn', );
+		console.log(bookButton);
+		bookButton.addEventListener( 'click', () =>
+				handleBookNowClick( barber, card, ),);
+
+		container.appendChild(card);
+	});
 }
 
-const createInput = () => {
-	// Creates the input outline
-	const input = document.createElement('div');
-	input.classList = 'input';
-	input.addEventListener('click', toggleDropdown,);
-	// Creates the input placeholder content
-  const inputPlaceholder = document.createElement('div');
-  inputPlaceholder.classList = 'input__placeholder';
 
-	const placeholder = document.createElement('p');
-	placeholder.textContent = 'Select user';
-	placeholder.classList.add( 'placeholder',);
+ // Renders the booking form for a selected barber.
 
-	// Appends the placeholder and chevron (stored in assets.js)
-	inputPlaceholder.appendChild( placeholder,);
-	inputPlaceholder.appendChild( dropdownIcon(),);
-	input.appendChild(inputPlaceholder);
+function renderBookingForm(barber) {
+	contentWrapper.innerHTML = ''; // Clear the screen
 
-	return input;
-};
+	const formHTML = `
+    <h1>Book an Appointment with ${ barber.name }</h1>
+    <form id="booking-form">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" name="name" required minlength="2">
 
-// const barberList = document.getElementById('barber-list');
-// barbers.forEach((barber) => {
-//   const barberCard = document.createElement('div');
-//   barberCard.classList.add('barber-card');
-// });
-// barberList.appendChild(barberCard);
-// barberCard.innerHTML
+      <label for="email">Your Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="day">Select a Day:</label>
+      <select id="day" name="day" required>
+        <option value="">--Please choose a day--</option>
+        ${barber.availability.map((day) => `<option value="${day}">${ day.charAt(0).toUpperCase() + day.slice(1) }</option>`,).join('') }
+      </select>
+
+      <div class="form-buttons">
+        <button type="submit">Confirm Booking</button>
+        <button type="button" id="back-btn">Go Back</button>
+      </div>
+    </form>
+    <div id="form-message"></div>
+  `;
+	contentWrapper.innerHTML = formHTML;
+
+	// Add event listeners for the new form
+	document
+		.getElementById('booking-form')
+		.addEventListener( 'submit', handleFormSubmit,);
+	document
+		.getElementById('back-btn')
+		.addEventListener( 'click', renderInitialView, );
+}
+
+// Event Handlers
+// These functions will handle user interactions.
+
+/**
+ * Handles the click on a "Book Now" button.
+ *  barber object.
+ *  card element clicked.
+ */
+function handleBookNowClick(
+	barber,
+	cardElement,
+) {
+	console.log( `Booking with ${barber.name}`, );
+	selectedBarber = barber; // Store the selected barber
+
+	//  create a 'selected' class to the card
+	document
+		.querySelectorAll( '.barber-card', )
+		.forEach((card) =>
+			card.classList.remove( 'selected', ),
+		);
+	cardElement.classList.add( 'selected', );
+
+	renderBookingForm(barber);
+}
+
+
+// Handles the submission of the booking form.
+
+function handleFormSubmit(event) {
+	event.preventDefault(); // Prevent the page from reloading
+	const form = event.target;
+	const messageEl =
+		document.getElementById( 'form-message', );
+
+	//  DOM validation check
+	if (form.checkValidity()) {
+		const customerName =
+			form.elements.name.value;
+		messageEl.textContent = `Thank you, ${customerName}! Your appointment with ${selectedBarber.name} is confirmed.`;
+		messageEl.style.color = 'green';
+		form.reset(); // Clear the form
+		// Use a BOM method
+		setTimeout(() => {
+			alert( 'Booking successful! Check your confirmation message.',);
+		}, 200);
+	} else {
+		messageEl.textContent =
+			'Please fill out all required fields correctly.';
+		messageEl.style.color = 'red';
+	}
+}
+
+renderInitialView();
