@@ -75,7 +75,7 @@ const barbers = [
 			'sunday',
 		],
 	},
-];
+]; 
 
 // Cache DOM Elements
 // cache elements needed to interact with
@@ -124,10 +124,10 @@ function renderBarberCards() {
     console.log(barber);
     console.log(card)
 		card.innerHTML = `
-      <img src="images/${barber.image}" alt="Photo of ${barber.name}" style="width:100px; height:100px; border-radius:10%; object-fit:cover; border: solid 1px black; padding: 10px;">
+      <img src="images/${barber.image}" alt="Photo of ${barber.name}" style="width:100px; height:100px; border-radius:20px; object-fit:cover; border: solid 1px black; padding: 10px 20px; margin: 20px 0 20px 0; ">
       <h2>${barber.name}</h2>
       <p>${barber.description}</p>
-      <button class="book-btn">Book Now</button>
+      <button class="book-btn" style=" padding: 5px;">Book Now</button>
     `;
 
 		// Add an event listener to the "Book Now" button on this specific card
@@ -211,13 +211,11 @@ function handleBookNowClick(
 function handleFormSubmit(event) {
 	event.preventDefault(); // Prevent the page from reloading
 	const form = event.target;
-	const messageEl =
-		document.getElementById( 'form-message', );
+	const messageEl = document.getElementById( 'form-message', );
 
 	//  DOM validation check
 	if (form.checkValidity()) {
-		const customerName =
-			form.elements.name.value;
+		const customerName = form.elements.name.value;
 		messageEl.textContent = `Thank you, ${customerName}! Your appointment with ${selectedBarber.name} is confirmed.`;
 		messageEl.style.color = 'green';
 		form.reset(); // Clear the form
