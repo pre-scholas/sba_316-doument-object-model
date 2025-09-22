@@ -76,6 +76,13 @@ const barbers = [
 		],
 	},
 ]; 
+const daysAvailable = []
+daysAvailable.push(barbers[0].availability)
+for (let i = 0; i < barbers.availability.length; i++) {
+	console.log(barbers.availability[i])
+}
+
+console.log(barbers.availability)
 
 // Cache DOM Elements
 // cache elements needed to interact with
@@ -121,11 +128,10 @@ function renderBarberCards() {
 	barbers.forEach((barber) => {
 		const card = document.createElement( 'div', );
 		card.classList.add( 'barber-card', );
-    console.log(barber);
-    console.log(card)
+             console.log(barber);
+             console.log(card)
 		card.innerHTML = `
       <img src="images/${barber.image}" alt="Photo of ${barber.name}" style="width:100px; height:100px; border-radius:20px; object-fit:cover; border: solid 1px black; padding: 10px 20px; margin: 20px 0 20px 0; ">
-      <h2>${barber.name}</h2>
       <p>${barber.description}</p>
       <button class="book-btn" style=" padding: 5px;">Book Now</button>
     `;
