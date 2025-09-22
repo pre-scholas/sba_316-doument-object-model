@@ -76,13 +76,13 @@ const barbers = [
 		],
 	},
 ]; 
-const daysAvailable = []
-daysAvailable.push(barbers)
-for (let i = 0; i < barbers.length; i++) {
-	console.log(barbers.availability)
-}
+const daysAvailable = barbers.flatMap(
+	(barber) =>
+		Array.isArray(barber.availability,)
+			? barber.availability : Object.values( barber.availability,),
+);
 
-console.log(barbers.availability)
+console.log(daysAvailable)
 
 // Cache DOM Elements
 // cache elements needed to interact with
