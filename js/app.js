@@ -77,9 +77,9 @@ const barbers = [
 	},
 ]; 
 const daysAvailable = []
-daysAvailable.push(barbers[0].availability)
-for (let i = 0; i < barbers.availability.length; i++) {
-	console.log(barbers.availability[i])
+daysAvailable.push(barbers)
+for (let i = 0; i < barbers.length; i++) {
+	console.log(barbers.availability)
 }
 
 console.log(barbers.availability)
